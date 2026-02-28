@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Game</title>
+    <style>
+        /* Basic styles for chessboard and pieces */
+        body { display: flex; justify-content: center; align-items: center; height: 100vh; background: #eee; }
+        canvas { border: 2px solid #333; }
+    </style>
+</head>
+<body>
+    <canvas id="chessboard" width="480" height="480"></canvas>
+    <script>
+        const canvas = document.getElementById('chessboard');
+        const ctx = canvas.getContext('2d');
+        const tileSize = canvas.width / 8;
+        let board = [
+            ['r','n','b','q','k','b','n','r'],
+            ['p','p','p','p','p','p','p','p'],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            ['P','P','P','P','P','P','P','P'],
+            ['R','N','B','Q','K','B','N','R'],
+        ];
+        let selectedPiece = null;
+        let selectedTile = null;
+
+        function drawBoard() {
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    ctx.fillStyle = (row + col) % 2 === 0 ? '#fff' : '#ccc';
+                    ctx.fillRect(col * tileSize, row * tileSize, tileSize, tileSize);
+                    if (board[row][col]) {
+                        ctx.font = '36px Arial';
+                        ctx.fillText(board[row][col], col * tileSize + tileSize / 4, row * tileSize + tileSize * 3/4);
+                    }
+                }
+            }
+        }
+
+        function mouseDown(event) {
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            const col = Math.floor(x / tileSize);
+            const row = Math.floor(y / tileSize);
+            if (board[row][col]) {
+                selectedPiece = board[row][col];
+                selectedTile = { row, col };
+            }
+        }
+
+        function mouseUp(event) {
+            if (selectedPiece) {
+                const rect = canvas.getBoundingClientRect();
+                const x = event.clientX - rect.left;
+                const y = event.clientY - rect.top;
+                const col = Math.floor(x / tileSize);
+                const row = Math.floor(y / tileSize);
+                if (isValidMove(selectedTile.row, selectedTile.col, row, col)) {
+                    board[row][col] = selectedPiece;
+                    board[selectedTile.row][selectedTile.col] = null;
+                }
+                selectedPiece = null;
+                drawBoard();
+            }
+        }
+
+        function isValidMove(fromRow, fromCol, toRow, toCol) {
+            // Add move validation logic here
+            return true; // Placeholder for actual validation
+        }
+
+        canvas.addEventListener('mousedown', mouseDown);
+        canvas.addEventListener('mouseup', mouseUp);
+        drawBoard();
+    </script>
+</body>
+</html>
