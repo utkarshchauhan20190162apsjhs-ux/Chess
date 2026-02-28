@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiplayer Chess Game</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        #chessboard {
+            width: 400px;
+            height: 400px;
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+        }
+        .square {
+            width: 50px;
+            height: 50px;
+        }
+        .light {
+            background-color: #f0d9b5;
+        }
+        .dark {
+            background-color: #b58863;
+        }
+        .controls {
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Multiplayer Chess Game</h1>
+    <div id="chessboard"></div>
+    <div class="controls">
+        <button id="reset">Reset Game</button>
+    </div>
+    <div id="move-history"></div>
+    <div id="player-turn">Current Turn: Player 1</div>
+
+    <script>
+        const board = document.getElementById('chessboard');
+        const moveHistory = document.getElementById('move-history');
+        const playerTurn = document.getElementById('player-turn');
+        let currentPlayer = 1;
+
+        // Create chessboard squares
+        for (let i = 0; i < 8; i++) {
+            for (let j = 0; j < 8; j++) {
+                const square = document.createElement('div');
+                square.classList.add('square', (i + j) % 2 === 0 ? 'light' : 'dark');
+                square.dataset.position = `${i}-${j}`;
+
+                square.addEventListener('click', () => {
+                    // Handle the square click
+                    const move = `Player ${currentPlayer} clicked on ${square.dataset.position}`;
+                    moveHistory.innerHTML += `<p>${move}</p>`;
+                    currentPlayer = currentPlayer === 1 ? 2 : 1;
+                    playerTurn.innerText = `Current Turn: Player ${currentPlayer}`;
+                });
+
+                board.appendChild(square);
+            }
+        }
+
+        // Reset game function
+        document.getElementById('reset').addEventListener('click', () => {
+            moveHistory.innerHTML = '';
+            currentPlayer = 1;
+            playerTurn.innerText = 'Current Turn: Player 1';
+        });
+    </script>
+</body>
+</html>
